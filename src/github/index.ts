@@ -808,7 +808,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "get_issue",
         description: "Get details of a specific issue in a GitHub repository.",
-        inputSchema: zodToJsonSchema(GetIssueSchema),
+        inputSchema: zodToJsonSchema(GetIssueSchema)
       },
       {
         name: "get_issue_comments",
