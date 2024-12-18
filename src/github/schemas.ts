@@ -93,8 +93,7 @@ export const GitHubTreeSchema = z.object({
   truncated: z.boolean(),
 });
 
-export const GitHubListCommitsSchema = z.array(
-  z.object({
+export const GitHubListCommitsSchema = z.array(z.object({
     sha: z.string(),
     node_id: z.string(),
     commit: z.object({
@@ -103,16 +102,15 @@ export const GitHubListCommitsSchema = z.array(
       message: z.string(),
       tree: z.object({
         sha: z.string(),
-        url: z.string(),
+        url: z.string()
       }),
       url: z.string(),
       comment_count: z.number(),
     }),
     url: z.string(),
     html_url: z.string(),
-    comments_url: z.string(),
-  })
-);
+    comments_url: z.string()
+  }));
 
 export const GitHubCommitSchema = z.object({
   sha: z.string(),
@@ -346,20 +344,10 @@ export const SearchRepositoriesSchema = z.object({
 export const ListCommitsSchema = z.object({
   owner: z.string().describe("Repository owner (username or organization)"),
   repo: z.string().describe("Repository name"),
-  page: z
-    .number()
-    .optional()
-    .describe("Page number for pagination (default: 1)"),
-  perPage: z
-    .number()
-    .optional()
-    .describe("Number of results per page (default: 30, max: 100)"),
-  sha: z
-    .string()
-    .optional()
-    .describe(
-      "SHA of the file being replaced (required when updating existing files)"
-    ),
+  page: z.number().optional().describe("Page number for pagination (default: 1)"),
+  perPage: z.number().optional().describe("Number of results per page (default: 30, max: 100)"),
+  sha: z.string().optional()
+    .describe("SHA of the file being replaced (required when updating existing files)")
 });
 
 export const CreateRepositorySchema = z.object({
@@ -661,13 +649,13 @@ export const SearchUsersSchema = z.object({
 export const ListIssuesOptionsSchema = z.object({
   owner: z.string(),
   repo: z.string(),
-  state: z.enum(["open", "closed", "all"]).optional(),
+  state: z.enum(['open', 'closed', 'all']).optional(),
   labels: z.array(z.string()).optional(),
-  sort: z.enum(["created", "updated", "comments"]).optional(),
-  direction: z.enum(["asc", "desc"]).optional(),
+  sort: z.enum(['created', 'updated', 'comments']).optional(),
+  direction: z.enum(['asc', 'desc']).optional(),
   since: z.string().optional(), // ISO 8601 timestamp
   page: z.number().optional(),
-  per_page: z.number().optional(),
+  per_page: z.number().optional()
 });
 
 export const UpdateIssueOptionsSchema = z.object({
@@ -676,10 +664,10 @@ export const UpdateIssueOptionsSchema = z.object({
   issue_number: z.number(),
   title: z.string().optional(),
   body: z.string().optional(),
-  state: z.enum(["open", "closed"]).optional(),
+  state: z.enum(['open', 'closed']).optional(),
   labels: z.array(z.string()).optional(),
   assignees: z.array(z.string()).optional(),
-  milestone: z.number().optional(),
+  milestone: z.number().optional()
 });
 
 export const IssueCommentSchema = z.object({

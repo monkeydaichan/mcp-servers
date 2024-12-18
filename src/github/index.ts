@@ -6,8 +6,8 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import fetch from "node-fetch";
-import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import { z } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 import {
   CreateBranchOptionsSchema,
   CreateBranchSchema,
@@ -20,8 +20,8 @@ import {
   CreateRepositorySchema,
   ForkRepositorySchema,
   GetFileContentsSchema,
-  GetIssueCommentsSchema,
   GetIssueSchema,
+  GetIssueCommentsSchema,
   GitHubComment,
   GitHubCommentSchema,
   GitHubCommitSchema,
@@ -499,7 +499,7 @@ async function listCommits(
   repo: string,
   page: number = 1,
   perPage: number = 30,
-  sha?: string
+  sha?: string,
 ): Promise<GitHubListCommits> {
   const url = new URL(`https://api.github.com/repos/${owner}/${repo}/commits`);
   url.searchParams.append("page", page.toString());
@@ -508,15 +508,18 @@ async function listCommits(
     url.searchParams.append("sha", sha);
   }
 
-  const response = await fetch(url.toString(), {
+  const response = await fetch(
+    url.toString(), 
+    {
     method: "GET",
     headers: {
-      Authorization: `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
-      Accept: "application/vnd.github.v3+json",
+      "Authorization": `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
+      "Accept": "application/vnd.github.v3+json",
       "User-Agent": "github-mcp-server",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-  });
+  }
+);
 
   if (!response.ok) {
     throw new Error(`GitHub API error: ${response.statusText}`);
@@ -528,28 +531,25 @@ async function listCommits(
 async function listIssues(
   owner: string,
   repo: string,
-  options: Omit<z.infer<typeof ListIssuesOptionsSchema>, "owner" | "repo">
+  options: Omit<z.infer<typeof ListIssuesOptionsSchema>, 'owner' | 'repo'>
 ): Promise<GitHubIssue[]> {
   const url = new URL(`https://api.github.com/repos/${owner}/${repo}/issues`);
 
   // Add query parameters
-  if (options.state) url.searchParams.append("state", options.state);
-  if (options.labels)
-    url.searchParams.append("labels", options.labels.join(","));
-  if (options.sort) url.searchParams.append("sort", options.sort);
-  if (options.direction)
-    url.searchParams.append("direction", options.direction);
-  if (options.since) url.searchParams.append("since", options.since);
-  if (options.page) url.searchParams.append("page", options.page.toString());
-  if (options.per_page)
-    url.searchParams.append("per_page", options.per_page.toString());
+  if (options.state) url.searchParams.append('state', options.state);
+  if (options.labels) url.searchParams.append('labels', options.labels.join(','));
+  if (options.sort) url.searchParams.append('sort', options.sort);
+  if (options.direction) url.searchParams.append('direction', options.direction);
+  if (options.since) url.searchParams.append('since', options.since);
+  if (options.page) url.searchParams.append('page', options.page.toString());
+  if (options.per_page) url.searchParams.append('per_page', options.per_page.toString());
 
   const response = await fetch(url.toString(), {
     headers: {
-      Authorization: `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
-      Accept: "application/vnd.github.v3+json",
-      "User-Agent": "github-mcp-server",
-    },
+      "Authorization": `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
+      "Accept": "application/vnd.github.v3+json",
+      "User-Agent": "github-mcp-server"
+    }
   });
 
   if (!response.ok) {
@@ -563,20 +563,17 @@ async function updateIssue(
   owner: string,
   repo: string,
   issueNumber: number,
-  options: Omit<
-    z.infer<typeof UpdateIssueOptionsSchema>,
-    "owner" | "repo" | "issue_number"
-  >
+  options: Omit<z.infer<typeof UpdateIssueOptionsSchema>, 'owner' | 'repo' | 'issue_number'>
 ): Promise<GitHubIssue> {
   const response = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}`,
     {
       method: "PATCH",
       headers: {
-        Authorization: `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
-        Accept: "application/vnd.github.v3+json",
+        "Authorization": `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
+        "Accept": "application/vnd.github.v3+json",
         "User-Agent": "github-mcp-server",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         title: options.title,
@@ -584,8 +581,8 @@ async function updateIssue(
         state: options.state,
         labels: options.labels,
         assignees: options.assignees,
-        milestone: options.milestone,
-      }),
+        milestone: options.milestone
+      })
     }
   );
 
@@ -607,12 +604,12 @@ async function addIssueComment(
     {
       method: "POST",
       headers: {
-        Authorization: `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
-        Accept: "application/vnd.github.v3+json",
+        "Authorization": `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
+        "Accept": "application/vnd.github.v3+json",
         "User-Agent": "github-mcp-server",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ body }),
+      body: JSON.stringify({ body })
     }
   );
 
@@ -775,23 +772,22 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "list_commits",
         description: "Get list of commits of a branch in a GitHub repository",
-        inputSchema: zodToJsonSchema(ListCommitsSchema),
+        inputSchema: zodToJsonSchema(ListCommitsSchema)
       },
       {
         name: "list_issues",
-        description:
-          "List issues in a GitHub repository with filtering options",
-        inputSchema: zodToJsonSchema(ListIssuesOptionsSchema),
+        description: "List issues in a GitHub repository with filtering options",
+        inputSchema: zodToJsonSchema(ListIssuesOptionsSchema)
       },
       {
         name: "update_issue",
         description: "Update an existing issue in a GitHub repository",
-        inputSchema: zodToJsonSchema(UpdateIssueOptionsSchema),
+        inputSchema: zodToJsonSchema(UpdateIssueOptionsSchema)
       },
       {
         name: "add_issue_comment",
         description: "Add a comment to an existing issue",
-        inputSchema: zodToJsonSchema(IssueCommentSchema),
+        inputSchema: zodToJsonSchema(IssueCommentSchema)
       },
       {
         name: "search_code",
@@ -1037,26 +1033,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "list_commits": {
         const args = ListCommitsSchema.parse(request.params.arguments);
-        const results = await listCommits(
-          args.owner,
-          args.repo,
-          args.page,
-          args.perPage,
-          args.sha
-        );
-        return {
-          content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
-        };
+        const results = await listCommits(args.owner, args.repo, args.page, args.perPage, args.sha);
+        return { content: [{ type: "text", text: JSON.stringify(results, null, 2) }] };
       }
 
       case "get_issue": {
-        const args = z
-          .object({
+        const args = z.object({
             owner: z.string(),
             repo: z.string(),
-            issue_number: z.number(),
-          })
-          .parse(request.params.arguments);
+            issue_number: z.number()
+          }).parse(request.params.arguments);
         const issue = await getIssue(args.owner, args.repo, args.issue_number);
         return { toolResult: issue };
       }
