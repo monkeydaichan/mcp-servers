@@ -61,8 +61,8 @@ import {
   type GitHubTree,
   type SearchCodeResponse,
   type SearchIssuesResponse,
-  type SearchUsersResponse,
-} from "./schemas.js";
+  type SearchUsersResponse
+} from './schemas.js';
 
 const server = new Server(
   {
