@@ -709,7 +709,7 @@ async function getIssue(
         "User-Agent": "github-mcp-server",
       },
     }
-  );
+);
 
   if (!response.ok) {
     throw new Error(`Github API error: ${response.statusText}`);
