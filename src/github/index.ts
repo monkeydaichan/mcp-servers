@@ -518,8 +518,8 @@ async function listCommits(
         "User-Agent": "github-mcp-server",
         "Content-Type": "application/json"
       },
-  }
-);
+    }
+  );
 
   if (!response.ok) {
     throw new Error(`GitHub API error: ${response.statusText}`);
