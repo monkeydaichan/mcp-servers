@@ -674,7 +674,7 @@ export const IssueCommentSchema = z.object({
   owner: z.string(),
   repo: z.string(),
   issue_number: z.number(),
-  body: z.string(),
+  body: z.string()
 });
 
 export const GetIssueSchema = z.object({

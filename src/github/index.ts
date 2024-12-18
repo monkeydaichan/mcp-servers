@@ -511,13 +511,13 @@ async function listCommits(
   const response = await fetch(
     url.toString(), 
     {
-    method: "GET",
-    headers: {
-      "Authorization": `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
-      "Accept": "application/vnd.github.v3+json",
-      "User-Agent": "github-mcp-server",
-      "Content-Type": "application/json"
-    },
+      method: "GET",
+      headers: {
+        "Authorization": `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "github-mcp-server",
+        "Content-Type": "application/json"
+      },
   }
 );
 
