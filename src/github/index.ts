@@ -509,7 +509,7 @@ async function listCommits(
   }
 
   const response = await fetch(
-    url.toString(), 
+    url.toString(),
     {
       method: "GET",
       headers: {
@@ -1039,10 +1039,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "get_issue": {
         const args = z.object({
-            owner: z.string(),
-            repo: z.string(),
-            issue_number: z.number()
-          }).parse(request.params.arguments);
+          owner: z.string(),
+          repo: z.string(),
+          issue_number: z.number()
+        }).parse(request.params.arguments);
         const issue = await getIssue(args.owner, args.repo, args.issue_number);
         return { toolResult: issue };
       }
