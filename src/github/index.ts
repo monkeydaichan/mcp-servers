@@ -843,10 +843,6 @@ async function getIssueComments(
   return z.array(GitHubCommentSchema).parse(await response.json());
 }
 
-// Add this to the tools array in setRequestHandler(ListToolsRequestSchema, ...)
-
-// Add this case in the CallToolRequestSchema handler
-
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
     if (!request.params.arguments) {
