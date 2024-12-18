@@ -680,7 +680,7 @@ export const IssueCommentSchema = z.object({
 export const GetIssueSchema = z.object({
   owner: z.string().describe("Repository owner (username or organization)"),
   repo: z.string().describe("Repository name"),
-  issue_number: z.number().describe("Issue number"),
+  issue_number: z.number().describe("Issue number")
 });
 
 // Comment related schemas
