@@ -94,23 +94,23 @@ export const GitHubTreeSchema = z.object({
 });
 
 export const GitHubListCommitsSchema = z.array(z.object({
-    sha: z.string(),
-    node_id: z.string(),
-    commit: z.object({
-      author: GitHubAuthorSchema,
-      committer: GitHubAuthorSchema,
-      message: z.string(),
-      tree: z.object({
-        sha: z.string(),
-        url: z.string()
-      }),
-      url: z.string(),
-      comment_count: z.number(),
+  sha: z.string(),
+  node_id: z.string(),
+  commit: z.object({
+    author: GitHubAuthorSchema,
+    committer: GitHubAuthorSchema,
+    message: z.string(),
+    tree: z.object({
+      sha: z.string(),
+      url: z.string()
     }),
     url: z.string(),
-    html_url: z.string(),
-    comments_url: z.string()
-  }));
+    comment_count: z.number(),
+  }),
+  url: z.string(),
+  html_url: z.string(),
+  comments_url: z.string()
+}));
 
 export const GitHubCommitSchema = z.object({
   sha: z.string(),
