@@ -153,6 +153,16 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         name: "get_issue_comment",
         description: "Get a specific comment from an issue or pull request",
         inputSchema: zodToJsonSchema(issues.GetIssueCommentSchema),
+      },
+      {
+        name: 'get_pull_request_comments',
+        description: 'Get the review comments on a pull request',
+        inputSchema: zodToJsonSchema(pulls.GetPullRequestCommentsSchema),
+      },
+      {
+        name: 'get_pull_request_reviews',
+        description: 'Get the reviews on a pull request',
+        inputSchema: zodToJsonSchema(pulls.GetPullRequestReviewsSchema),
       }
     ],
   };
@@ -350,6 +360,34 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         );
         return { toolResult: comment };
       }
+      
+      case 'get_pull_request_comments': {
+        const args = pulls.GetPullRequestCommentsSchema.parse(
+          request.params.arguments
+        );
+        const comments = await pulls.getPullRequestComments(
+          args.owner,
+          args.repo,
+          args.pull_number
+        );
+        return {
+          content: [{ type: 'text', text: JSON.stringify(comments, null, 2) }],
+        };
+      }
+
+      case 'get_pull_request_reviews': {
+        const args = pulls.GetPullRequestReviewsSchema.parse(
+          request.params.arguments
+        );
+        const reviews = await pulls.getPullRequestReviews(
+          args.owner,
+          args.repo,
+          args.pull_number
+        );
+        return {
+          content: [{ type: 'text', text: JSON.stringify(reviews, null, 2) }],
+        };
+      }      
       
       default:
         throw new Error(`Unknown tool: ${request.params.name}`);
