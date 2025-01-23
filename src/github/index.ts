@@ -1,20 +1,17 @@
 #!/usr/bin/env node
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
-import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
-import * as repository from './operations/repository.js';
-import * as files from './operations/files.js';
-import * as issues from './operations/issues.js';
-import * as pulls from './operations/pulls.js';
-import * as branches from './operations/branches.js';
-import * as search from './operations/search.js';
-import * as commits from './operations/commits.js';
+import * as repository from "./operations/repository.js";
+import * as files from "./operations/files.js";
+import * as issues from "./operations/issues.js";
+import * as pulls from "./operations/pulls.js";
+import * as branches from "./operations/branches.js";
+import * as search from "./operations/search.js";
+import * as commits from "./operations/commits.js";
 import {
   GitHubError,
   GitHubValidationError,
@@ -24,7 +21,7 @@ import {
   GitHubRateLimitError,
   GitHubConflictError,
   isGitHubError,
-} from './common/errors.js';
+} from "./common/errors.js";
 
 const server = new Server(
   {
@@ -40,7 +37,7 @@ const server = new Server(
 
 function formatGitHubError(error: GitHubError): string {
   let message = `GitHub API Error: ${error.message}`;
-  
+
   if (error instanceof GitHubValidationError) {
     message = `Validation Error: ${error.message}`;
     if (error.response) {
@@ -112,22 +109,22 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "list_commits",
         description: "Get list of commits of a branch in a GitHub repository",
-        inputSchema: zodToJsonSchema(commits.ListCommitsSchema)
+        inputSchema: zodToJsonSchema(commits.ListCommitsSchema),
       },
       {
         name: "list_issues",
         description: "List issues in a GitHub repository with filtering options",
-        inputSchema: zodToJsonSchema(issues.ListIssuesOptionsSchema)
+        inputSchema: zodToJsonSchema(issues.ListIssuesOptionsSchema),
       },
       {
         name: "update_issue",
         description: "Update an existing issue in a GitHub repository",
-        inputSchema: zodToJsonSchema(issues.UpdateIssueOptionsSchema)
+        inputSchema: zodToJsonSchema(issues.UpdateIssueOptionsSchema),
       },
       {
         name: "add_issue_comment",
         description: "Add a comment to an existing issue",
-        inputSchema: zodToJsonSchema(issues.IssueCommentSchema)
+        inputSchema: zodToJsonSchema(issues.IssueCommentSchema),
       },
       {
         name: "search_code",
@@ -147,18 +144,26 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "get_issue",
         description: "Get details of a specific issue in a GitHub repository.",
-        inputSchema: zodToJsonSchema(issues.GetIssueSchema)
+        inputSchema: zodToJsonSchema(issues.GetIssueSchema),
       },
       {
         name: "get_issue_comment",
         description: "Get a specific comment from an issue or pull request",
         inputSchema: zodToJsonSchema(issues.GetIssueCommentSchema),
-      }
+      },
+      {
+        name: "get_pull_request_comments",
+        description: "Get the review comments on a pull request",
+        inputSchema: zodToJsonSchema(pulls.GetPullRequestCommentsSchema),
+      },
+      {
+        name: "get_pull_request_reviews",
+        description: "Get the reviews on a pull request",
+        inputSchema: zodToJsonSchema(pulls.GetPullRequestReviewsSchema),
+      },
     ],
   };
 });
-
-
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
@@ -177,12 +182,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "create_branch": {
         const args = branches.CreateBranchSchema.parse(request.params.arguments);
-        const branch = await branches.createBranchFromRef(
-          args.owner,
-          args.repo,
-          args.branch,
-          args.from_branch
-        );
+        const branch = await branches.createBranchFromRef(args.owner, args.repo, args.branch, args.from_branch);
         return {
           content: [{ type: "text", text: JSON.stringify(branch, null, 2) }],
         };
@@ -190,11 +190,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "search_repositories": {
         const args = repository.SearchRepositoriesSchema.parse(request.params.arguments);
-        const results = await repository.searchRepositories(
-          args.query,
-          args.page,
-          args.perPage
-        );
+        const results = await repository.searchRepositories(args.query, args.page, args.perPage);
         return {
           content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
         };
@@ -210,12 +206,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "get_file_contents": {
         const args = files.GetFileContentsSchema.parse(request.params.arguments);
-        const contents = await files.getFileContents(
-          args.owner,
-          args.repo,
-          args.path,
-          args.branch
-        );
+        const contents = await files.getFileContents(args.owner, args.repo, args.path, args.branch);
         return {
           content: [{ type: "text", text: JSON.stringify(contents, null, 2) }],
         };
@@ -239,13 +230,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "push_files": {
         const args = files.PushFilesSchema.parse(request.params.arguments);
-        const result = await files.pushFiles(
-          args.owner,
-          args.repo,
-          args.branch,
-          args.files,
-          args.message
-        );
+        const result = await files.pushFiles(args.owner, args.repo, args.branch, args.files, args.message);
         return {
           content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
         };
@@ -321,13 +306,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "list_commits": {
         const args = commits.ListCommitsSchema.parse(request.params.arguments);
-        const results = await commits.listCommits(
-          args.owner,
-          args.repo,
-          args.page,
-          args.perPage,
-          args.sha
-        );
+        const results = await commits.listCommits(args.owner, args.repo, args.page, args.perPage, args.sha);
         return {
           content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
         };
@@ -343,14 +322,26 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "get_issue_comment": {
         const args = issues.GetIssueCommentSchema.parse(request.params.arguments);
-        const comment = await issues.getIssueComment(
-          args.owner,
-          args.repo,
-          args.comment_id
-        );
+        const comment = await issues.getIssueComment(args.owner, args.repo, args.comment_id);
         return { toolResult: comment };
       }
-      
+
+      case "get_pull_request_comments": {
+        const args = pulls.GetPullRequestCommentsSchema.parse(request.params.arguments);
+        const comments = await pulls.getPullRequestComments(args.owner, args.repo, args.pull_number);
+        return {
+          content: [{ type: "text", text: JSON.stringify(comments, null, 2) }],
+        };
+      }
+
+      case "get_pull_request_reviews": {
+        const args = pulls.GetPullRequestReviewsSchema.parse(request.params.arguments);
+        const reviews = await pulls.getPullRequestReviews(args.owner, args.repo, args.pull_number);
+        return {
+          content: [{ type: "text", text: JSON.stringify(reviews, null, 2) }],
+        };
+      }
+
       default:
         throw new Error(`Unknown tool: ${request.params.name}`);
     }
