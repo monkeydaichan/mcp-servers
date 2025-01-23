@@ -4,5 +4,12 @@
   "javascript.format.semicolons": "insert",
   "javascript.preferences.quoteStyle": "double",
   "prettier.singleQuote": false,
-  "prettier.jsxSingleQuote": false
+  "prettier.jsxSingleQuote": false,
+  "editor.wordWrap": "off",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.printWidth": 120
 }
