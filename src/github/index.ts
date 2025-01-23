@@ -148,34 +148,17 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         name: "get_issue",
         description: "Get details of a specific issue in a GitHub repository.",
         inputSchema: zodToJsonSchema(issues.GetIssueSchema)
+      },
+      {
+        name: "get_issue_comment",
+        description: "Get a specific comment from an issue or pull request",
+        inputSchema: zodToJsonSchema(issues.GetIssueCommentSchema),
       }
     ],
   };
 });
 
-// Add this function near the other GitHub API functions
-async function getIssueComments(
-  owner: string,
-  repo: string,
-  issueNumber: number
-): Promise<GitHubComment[]> {
-  const response = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}/comments`,
-    {
-      headers: {
-        Authorization: `token ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
-        Accept: "application/vnd.github.v3+json",
-        "User-Agent": "github-mcp-server",
-      },
-    }
-  );
 
-  if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.statusText}`);
-  }
-
-  return z.array(GitHubCommentSchema).parse(await response.json());
-}
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
@@ -350,16 +333,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return { toolResult: issue };
       }
 
-      case "get_issue_comments": {
-        const args = GetIssueCommentsSchema.parse(request.params.arguments);
-        const comments = await getIssueComments(
+      case "get_issue_comment": {
+        const args = issues.GetIssueCommentSchema.parse(request.params.arguments);
+        const comment = await issues.getIssueComment(
           args.owner,
           args.repo,
-          args.issue_number
+          args.comment_id
         );
-        return { toolResult: comments };
+        return { toolResult: comment };
       }
-
+      
       default:
         throw new Error(`Unknown tool: ${request.params.name}`);
     }
