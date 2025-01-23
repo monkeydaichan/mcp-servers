@@ -278,12 +278,12 @@ MCP Server for the GitHub API, enabling file operations, repository management, 
    - Returns: Array of pull request reviews with details like the review state (APPROVED, CHANGES_REQUESTED, etc.), reviewer, and review body
 
 27. `get_issue_comment`
-- Get a specific comment from an issue or pull request
-- Inputs:
-  - `owner` (string): Repository owner
-  - `repo` (string): Repository name
-  - `comment_id` (number): Comment ID to retrieve
-- Returns: Issue comment details including the comment text, author, and creation date
+   - Get a specific comment from an issue or pull request
+   - Inputs:
+     - `owner` (string): Repository owner
+     - `repo` (string): Repository name
+     - `comment_id` (number): Comment ID to retrieve
+   - Returns: Issue comment details including the comment text, author, and creation date
 
 ## Search Query Syntax
 
