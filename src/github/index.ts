@@ -20,18 +20,18 @@ import {
   GitHubPermissionError,
   GitHubRateLimitError,
   GitHubConflictError,
-  isGitHubError
+  isGitHubError,
 } from "./common/errors.js";
 
 const server = new Server(
   {
     name: "github-mcp-server",
-    version: "0.1.0"
+    version: "0.1.0",
   },
   {
     capabilities: {
-      tools: {}
-    }
+      tools: {},
+    },
   }
 );
 
@@ -64,104 +64,104 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "create_or_update_file",
         description: "Create or update a single file in a GitHub repository",
-        inputSchema: zodToJsonSchema(files.CreateOrUpdateFileSchema)
+        inputSchema: zodToJsonSchema(files.CreateOrUpdateFileSchema),
       },
       {
         name: "search_repositories",
         description: "Search for GitHub repositories",
-        inputSchema: zodToJsonSchema(repository.SearchRepositoriesSchema)
+        inputSchema: zodToJsonSchema(repository.SearchRepositoriesSchema),
       },
       {
         name: "create_repository",
         description: "Create a new GitHub repository in your account",
-        inputSchema: zodToJsonSchema(repository.CreateRepositoryOptionsSchema)
+        inputSchema: zodToJsonSchema(repository.CreateRepositoryOptionsSchema),
       },
       {
         name: "get_file_contents",
         description: "Get the contents of a file or directory from a GitHub repository",
-        inputSchema: zodToJsonSchema(files.GetFileContentsSchema)
+        inputSchema: zodToJsonSchema(files.GetFileContentsSchema),
       },
       {
         name: "push_files",
         description: "Push multiple files to a GitHub repository in a single commit",
-        inputSchema: zodToJsonSchema(files.PushFilesSchema)
+        inputSchema: zodToJsonSchema(files.PushFilesSchema),
       },
       {
         name: "create_issue",
         description: "Create a new issue in a GitHub repository",
-        inputSchema: zodToJsonSchema(issues.CreateIssueSchema)
+        inputSchema: zodToJsonSchema(issues.CreateIssueSchema),
       },
       {
         name: "create_pull_request",
         description: "Create a new pull request in a GitHub repository",
-        inputSchema: zodToJsonSchema(pulls.CreatePullRequestSchema)
+        inputSchema: zodToJsonSchema(pulls.CreatePullRequestSchema),
       },
       {
         name: "fork_repository",
         description: "Fork a GitHub repository to your account or specified organization",
-        inputSchema: zodToJsonSchema(repository.ForkRepositorySchema)
+        inputSchema: zodToJsonSchema(repository.ForkRepositorySchema),
       },
       {
         name: "create_branch",
         description: "Create a new branch in a GitHub repository",
-        inputSchema: zodToJsonSchema(branches.CreateBranchSchema)
+        inputSchema: zodToJsonSchema(branches.CreateBranchSchema),
       },
       {
         name: "list_commits",
         description: "Get list of commits of a branch in a GitHub repository",
-        inputSchema: zodToJsonSchema(commits.ListCommitsSchema)
+        inputSchema: zodToJsonSchema(commits.ListCommitsSchema),
       },
       {
         name: "list_issues",
         description: "List issues in a GitHub repository with filtering options",
-        inputSchema: zodToJsonSchema(issues.ListIssuesOptionsSchema)
+        inputSchema: zodToJsonSchema(issues.ListIssuesOptionsSchema),
       },
       {
         name: "update_issue",
         description: "Update an existing issue in a GitHub repository",
-        inputSchema: zodToJsonSchema(issues.UpdateIssueOptionsSchema)
+        inputSchema: zodToJsonSchema(issues.UpdateIssueOptionsSchema),
       },
       {
         name: "add_issue_comment",
         description: "Add a comment to an existing issue",
-        inputSchema: zodToJsonSchema(issues.IssueCommentSchema)
+        inputSchema: zodToJsonSchema(issues.IssueCommentSchema),
       },
       {
         name: "search_code",
         description: "Search for code across GitHub repositories",
-        inputSchema: zodToJsonSchema(search.SearchCodeSchema)
+        inputSchema: zodToJsonSchema(search.SearchCodeSchema),
       },
       {
         name: "search_issues",
         description: "Search for issues and pull requests across GitHub repositories",
-        inputSchema: zodToJsonSchema(search.SearchIssuesSchema)
+        inputSchema: zodToJsonSchema(search.SearchIssuesSchema),
       },
       {
         name: "search_users",
         description: "Search for users on GitHub",
-        inputSchema: zodToJsonSchema(search.SearchUsersSchema)
+        inputSchema: zodToJsonSchema(search.SearchUsersSchema),
       },
       {
         name: "get_issue",
         description: "Get details of a specific issue in a GitHub repository.",
-        inputSchema: zodToJsonSchema(issues.GetIssueSchema)
+        inputSchema: zodToJsonSchema(issues.GetIssueSchema),
       },
       {
         name: "get_issue_comment",
         description: "Get a specific comment from an issue or pull request",
-        inputSchema: zodToJsonSchema(issues.GetIssueCommentSchema)
+        inputSchema: zodToJsonSchema(issues.GetIssueCommentSchema),
       },
       {
         name: "get_pull_request_comments",
         description: "Get the review comments on a pull request",
-        inputSchema: zodToJsonSchema(pulls.GetPullRequestCommentsSchema)
+        inputSchema: zodToJsonSchema(pulls.GetPullRequestCommentsSchema),
       },
       {
         name: "get_pull_request_reviews",
         description: "Get the reviews on a pull request",
-        inputSchema: zodToJsonSchema(pulls.GetPullRequestReviewsSchema)
-      }
-    ]
+        inputSchema: zodToJsonSchema(pulls.GetPullRequestReviewsSchema),
+      },
+    ],
   };
 });
 
@@ -176,7 +176,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = repository.ForkRepositorySchema.parse(request.params.arguments);
         const fork = await repository.forkRepository(args.owner, args.repo, args.organization);
         return {
-          content: [{ type: "text", text: JSON.stringify(fork, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(fork, null, 2) }],
         };
       }
 
@@ -184,7 +184,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = branches.CreateBranchSchema.parse(request.params.arguments);
         const branch = await branches.createBranchFromRef(args.owner, args.repo, args.branch, args.from_branch);
         return {
-          content: [{ type: "text", text: JSON.stringify(branch, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(branch, null, 2) }],
         };
       }
 
@@ -192,7 +192,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = repository.SearchRepositoriesSchema.parse(request.params.arguments);
         const results = await repository.searchRepositories(args.query, args.page, args.perPage);
         return {
-          content: [{ type: "text", text: JSON.stringify(results, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
         };
       }
 
@@ -200,7 +200,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = repository.CreateRepositoryOptionsSchema.parse(request.params.arguments);
         const result = await repository.createRepository(args);
         return {
-          content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
         };
       }
 
@@ -208,7 +208,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = files.GetFileContentsSchema.parse(request.params.arguments);
         const contents = await files.getFileContents(args.owner, args.repo, args.path, args.branch);
         return {
-          content: [{ type: "text", text: JSON.stringify(contents, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(contents, null, 2) }],
         };
       }
 
@@ -224,7 +224,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           args.sha
         );
         return {
-          content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
         };
       }
 
@@ -232,7 +232,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = files.PushFilesSchema.parse(request.params.arguments);
         const result = await files.pushFiles(args.owner, args.repo, args.branch, args.files, args.message);
         return {
-          content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
         };
       }
 
@@ -241,7 +241,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const { owner, repo, ...options } = args;
         const issue = await issues.createIssue(owner, repo, options);
         return {
-          content: [{ type: "text", text: JSON.stringify(issue, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(issue, null, 2) }],
         };
       }
 
@@ -249,7 +249,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = pulls.CreatePullRequestSchema.parse(request.params.arguments);
         const pullRequest = await pulls.createPullRequest(args);
         return {
-          content: [{ type: "text", text: JSON.stringify(pullRequest, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(pullRequest, null, 2) }],
         };
       }
 
@@ -257,7 +257,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = search.SearchCodeSchema.parse(request.params.arguments);
         const results = await search.searchCode(args);
         return {
-          content: [{ type: "text", text: JSON.stringify(results, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
         };
       }
 
@@ -265,7 +265,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = search.SearchIssuesSchema.parse(request.params.arguments);
         const results = await search.searchIssues(args);
         return {
-          content: [{ type: "text", text: JSON.stringify(results, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
         };
       }
 
@@ -273,7 +273,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = search.SearchUsersSchema.parse(request.params.arguments);
         const results = await search.searchUsers(args);
         return {
-          content: [{ type: "text", text: JSON.stringify(results, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
         };
       }
 
@@ -282,7 +282,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const { owner, repo, ...options } = args;
         const result = await issues.listIssues(owner, repo, options);
         return {
-          content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
         };
       }
 
@@ -291,7 +291,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const { owner, repo, issue_number, ...options } = args;
         const result = await issues.updateIssue(owner, repo, issue_number, options);
         return {
-          content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
         };
       }
 
@@ -300,7 +300,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const { owner, repo, issue_number, body } = args;
         const result = await issues.addIssueComment(owner, repo, issue_number, body);
         return {
-          content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
         };
       }
 
@@ -308,7 +308,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = commits.ListCommitsSchema.parse(request.params.arguments);
         const results = await commits.listCommits(args.owner, args.repo, args.page, args.perPage, args.sha);
         return {
-          content: [{ type: "text", text: JSON.stringify(results, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
         };
       }
 
@@ -316,7 +316,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = issues.GetIssueSchema.parse(request.params.arguments);
         const issue = await issues.getIssue(args.owner, args.repo, args.issue_number);
         return {
-          content: [{ type: "text", text: JSON.stringify(issue, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(issue, null, 2) }],
         };
       }
 
@@ -330,7 +330,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = pulls.GetPullRequestCommentsSchema.parse(request.params.arguments);
         const comments = await pulls.getPullRequestComments(args.owner, args.repo, args.pull_number);
         return {
-          content: [{ type: "text", text: JSON.stringify(comments, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(comments, null, 2) }],
         };
       }
 
@@ -338,7 +338,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const args = pulls.GetPullRequestReviewsSchema.parse(request.params.arguments);
         const reviews = await pulls.getPullRequestReviews(args.owner, args.repo, args.pull_number);
         return {
-          content: [{ type: "text", text: JSON.stringify(reviews, null, 2) }]
+          content: [{ type: "text", text: JSON.stringify(reviews, null, 2) }],
         };
       }
 
